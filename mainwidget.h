@@ -1,7 +1,10 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include "projectcontroller.h"
+
 #include <QWidget>
+#include <memory>
 
 namespace Ui {
 class MainWidget;
@@ -17,11 +20,14 @@ public:
 
 private slots:
     void on_defaultPB_clicked();
-
     void on_launchPB_clicked();
+    void on_refreshProjectsPB_clicked();
+    void on_aboutPB_clicked();
 
 private:
     Ui::MainWidget *ui;
-};
+    std::unique_ptr<ProjectController> projectController;
 
+    void fillTable();
+};
 #endif // MAINWIDGET_H

@@ -9,6 +9,10 @@ class ProjectController
 public:
     ProjectController();
 
+    const QStringList& getProjectsNames() const {return projectsNames; }
+    bool prepareProject(uint index) const;
+    void refreshList();
+
 private:
     const QString settingsFileName = "settings.ini";
     const QString gameName = "PlatMotionGame";
@@ -21,8 +25,7 @@ private:
 
 
     void initialize();
-    QStringList getProjectsNames();
-    bool prepareProject(uint index);
+    bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const;
 };
 
 #endif // PROJECTCONTROLLER_H
