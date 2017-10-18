@@ -26,10 +26,12 @@ CONFIG += c++14
 
 SOURCES += \
         main.cpp \
-        mainwidget.cpp
+        mainwidget.cpp \
+    projectcontroller.cpp
 
 HEADERS += \
-        mainwidget.h
+        mainwidget.h \
+    projectcontroller.h
 
 FORMS += \
         mainwidget.ui
