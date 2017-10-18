@@ -24,19 +24,54 @@ void ProjectController::refreshList()
 
     for (auto& name: projectsNames)
     {
-        QDir projectDir(projectsDirectory + "\\" + name + "\\" + gameName + "_Data");
-
-        if (projectDir.exists() == false || projectDir.isEmpty())
+        QDir projectDir(projectsDirectory + QDir::separator()
+                        + name + QDir::separator()
+                        + gameName + "_Data");
+        QFile executable(projectsDirectory + QDir::separator()
+                         + name + QDir::separator()
+                         + gameName + ".exe");
+        if (projectDir.exists() == false || projectDir.isEmpty()
+            || executable.exists() == false)
             projectsNames.removeAll(name);
     }
+
     projectsNames.removeAll("..");
 }
 
 bool ProjectController::prepareProject(uint index) const
 {
-    return copy_dir_recursive(projectsDirectory + "\\" + projectsNames.at(index),
+    QFile(destinationDirectory + QDir::separator() + gameName + ".exe").remove();
+    QDir(destinationDirectory + QDir::separator() + gameName + "_Data").removeRecursively();
+
+    return copy_dir_recursive(projectsDirectory + QDir::separator() + projectsNames.at(index),
                               destinationDirectory, true);
 }
+
+/*static bool copyRecursively(const QString &srcFilePath,
+                            const QString &tgtFilePath)
+{
+    QFileInfo srcFileInfo(srcFilePath);
+    if (srcFileInfo.isDir()) {
+        QDir targetDir(tgtFilePath);
+        targetDir.cdUp();
+        if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
+            return false;
+        QDir sourceDir(srcFilePath);
+        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+        foreach (const QString &fileName, fileNames) {
+            const QString newSrcFilePath
+                    = srcFilePath + QLatin1Char('/') + fileName;
+            const QString newTgtFilePath
+                    = tgtFilePath + QLatin1Char('/') + fileName;
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath))
+                return false;
+        }
+    } else {
+        if (!QFile::copy(srcFilePath, tgtFilePath))
+            return false;
+    }
+    return true;
+}*/
 
 bool ProjectController::copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const
 {
@@ -73,7 +108,7 @@ bool ProjectController::copy_dir_recursive(QString from_dir, QString to_dir, boo
         QString from = from_dir + copy_dir;
         QString to = to_dir + copy_dir;
 
-        if (dir.mkpath(to) == false)
+        if (QDir(to_dir).mkpath(copy_dir) == false)
             return false;
 
         if (copy_dir_recursive(from, to, replace_on_conflit) == false)

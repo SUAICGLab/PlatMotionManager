@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
+#include <QDebug>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -7,6 +8,7 @@ MainWidget::MainWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->projectsTW->resizeColumnsToContents();
+    ui->projectsTW->setSelectionMode(QAbstractItemView::SingleSelection);
     projectController = std::make_unique<ProjectController>();
     fillTable();
 }
@@ -23,7 +25,9 @@ void MainWidget::on_defaultPB_clicked()
 
 void MainWidget::on_launchPB_clicked()
 {
-
+    if (!ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
+        if (!projectController->prepareProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row()))
+            qWarning() << "cant copy folder!";
 }
 
 void MainWidget::on_refreshProjectsPB_clicked()
@@ -38,6 +42,7 @@ void MainWidget::on_aboutPB_clicked()
 
 void MainWidget::fillTable()
 {
+    projectController->refreshList();
     ui->projectsTW->clearContents();
     ui->projectsTW->setRowCount(projectController->getProjectsNames().size());
 
