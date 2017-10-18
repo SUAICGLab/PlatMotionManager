@@ -1,4 +1,5 @@
 #include "projectcontroller.h"
+#include <QMessageBox>
 
 ProjectController::ProjectController()
 {
@@ -11,7 +12,23 @@ void ProjectController::initialize()
     settings->beginGroup("Main");
     projectsDirectory    = settings->value("projects-directory").toString();
     destinationDirectory = settings->value("game-directory").toString();
+    defaultGameDirectory = settings->value("default-game-directory").toString();
     settings->endGroup();
+
+    if (!QFile(settingsFileName).exists())
+    {
+        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Файл настроек \"settings.ini\" не существует.\n"
+                                                                             "Продолжение работы невозможно. Обратитесь к преподавателю");
+        exit(EXIT_FAILURE);
+    }
+
+    if (projectsDirectory.isEmpty() || destinationDirectory.isEmpty()|| defaultGameDirectory.isEmpty())
+    {
+        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Неверный формат файла настроек.\n"
+                                                                             "Один или несколько параметров не указаны.\n"
+                                                                             "Продолжение работы невозможно. Обратитесь к преподавателю");
+        exit(EXIT_FAILURE);
+    }
 
     refreshList();
 }
@@ -24,14 +41,7 @@ void ProjectController::refreshList()
 
     for (auto& name: projectsNames)
     {
-        QDir projectDir(projectsDirectory + QDir::separator()
-                        + name + QDir::separator()
-                        + gameName + "_Data");
-        QFile executable(projectsDirectory + QDir::separator()
-                         + name + QDir::separator()
-                         + gameName + ".exe");
-        if (projectDir.exists() == false || projectDir.isEmpty()
-            || executable.exists() == false)
+        if(!isGameDir(projectsDirectory + QDir::separator() + name))
             projectsNames.removeAll(name);
     }
 
@@ -47,31 +57,17 @@ bool ProjectController::prepareProject(uint index) const
                               destinationDirectory, true);
 }
 
-/*static bool copyRecursively(const QString &srcFilePath,
-                            const QString &tgtFilePath)
+bool ProjectController::isGameDir(QString dirName)
 {
-    QFileInfo srcFileInfo(srcFilePath);
-    if (srcFileInfo.isDir()) {
-        QDir targetDir(tgtFilePath);
-        targetDir.cdUp();
-        if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
-            return false;
-        QDir sourceDir(srcFilePath);
-        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
-        foreach (const QString &fileName, fileNames) {
-            const QString newSrcFilePath
-                    = srcFilePath + QLatin1Char('/') + fileName;
-            const QString newTgtFilePath
-                    = tgtFilePath + QLatin1Char('/') + fileName;
-            if (!copyRecursively(newSrcFilePath, newTgtFilePath))
-                return false;
-        }
-    } else {
-        if (!QFile::copy(srcFilePath, tgtFilePath))
-            return false;
-    }
-    return true;
-}*/
+    QDir gameDir(dirName + QDir::separator()
+                 + gameName + "_Data");
+    QFile executable(dirName + QDir::separator()
+                     + gameName + ".exe");
+
+    return gameDir.exists()    == true  ||
+           gameDir.isEmpty()   == false ||
+           executable.exists() == true;
+}
 
 bool ProjectController::copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const
 {

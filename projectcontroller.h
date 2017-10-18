@@ -21,11 +21,13 @@ private:
 
     QString projectsDirectory;
     QString destinationDirectory;
+    QString defaultGameDirectory;
     QStringList projectsNames;
 
 
     void initialize();
     bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const;
+    bool isGameDir(QString dirName);
 };
 
 #endif // PROJECTCONTROLLER_H

@@ -1,6 +1,7 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 #include <QDebug>
+#include <QMessageBox>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -26,8 +27,12 @@ void MainWidget::on_defaultPB_clicked()
 void MainWidget::on_launchPB_clicked()
 {
     if (!ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
+    {
         if (!projectController->prepareProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row()))
-            qWarning() << "cant copy folder!";
+            QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу скопировать файл");
+        else
+            QMessageBox::information(this, "PlatMotionManager", "Готово!");
+    }
 }
 
 void MainWidget::on_refreshProjectsPB_clicked()
