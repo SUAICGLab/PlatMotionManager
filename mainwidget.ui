@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>503</width>
+    <width>519</width>
     <height>477</height>
    </rect>
   </property>
@@ -15,12 +15,31 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QTableWidget" name="projectsTW">
-     <column>
-      <property name="text">
-       <string>Название проекта</string>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>309</width>
+        <height>453</height>
+       </rect>
       </property>
-     </column>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QTableWidget" name="projectsTW">
+         <column>
+          <property name="text">
+           <string>Название проекта</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
@@ -28,7 +47,7 @@
      <item>
       <widget class="QPushButton" name="launchPB">
        <property name="text">
-        <string>Подготовить для запуска</string>
+        <string>Подготовить к запуску</string>
        </property>
       </widget>
      </item>

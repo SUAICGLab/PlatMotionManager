@@ -28,6 +28,8 @@ private:
     Ui::MainWidget *ui;
     std::unique_ptr<ProjectController> projectController;
 
+    const QString version = "0.1";
+
     void fillTable();
 };
 #endif // MAINWIDGET_H

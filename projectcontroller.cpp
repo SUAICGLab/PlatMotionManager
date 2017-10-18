@@ -57,15 +57,26 @@ bool ProjectController::prepareProject(uint index) const
                               destinationDirectory, true);
 }
 
-bool ProjectController::isGameDir(QString dirName)
+bool ProjectController::restoreDefault() const
+{
+    if (!isGameDir(defaultGameDirectory))
+            return false;
+
+    QFile(destinationDirectory + QDir::separator() + gameName + ".exe").remove();
+    QDir(destinationDirectory + QDir::separator() + gameName + "_Data").removeRecursively();
+
+    return copy_dir_recursive(defaultGameDirectory, destinationDirectory, true);
+}
+
+bool ProjectController::isGameDir(QString dirName) const
 {
     QDir gameDir(dirName + QDir::separator()
                  + gameName + "_Data");
     QFile executable(dirName + QDir::separator()
                      + gameName + ".exe");
 
-    return gameDir.exists()    == true  ||
-           gameDir.isEmpty()   == false ||
+    return gameDir.exists()    == true  &&
+           gameDir.isEmpty()   == false &&
            executable.exists() == true;
 }
 
