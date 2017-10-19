@@ -2,6 +2,7 @@
 #include "ui_mainwidget.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QFileDialog>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
@@ -21,7 +22,7 @@ MainWidget::~MainWidget()
 
 void MainWidget::on_defaultPB_clicked()
 {
-    if (!projectController->restoreDefaultGame())
+    if (!projectController->restoreDefaultProject())
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу восстановить приложение по умолчанию.\n"
                                                                          "Обратитесь к преподавателю");
     else
@@ -42,6 +43,37 @@ void MainWidget::on_launchPB_clicked()
 void MainWidget::on_refreshProjectsPB_clicked()
 {
     fillTable();
+}
+
+void MainWidget::on_loadPB_clicked()
+{
+    QString projectDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
+                                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if (projectDir.isEmpty())
+        return;
+
+    if (!projectController->loadProject(projectDir))
+        QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу добавить приложение");
+    else
+        QMessageBox::information(this, "PlatMotionManager", "Готово!");
+
+    fillTable();
+}
+
+void MainWidget::on_reloadPB_clicked()
+{
+    if (!ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
+    {
+        QString projectDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
+                                                               QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+        if (projectDir.isEmpty())
+            return;
+
+        if (!projectController->reloadProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row(), projectDir))
+            QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу обновить приложение");
+        else
+            QMessageBox::information(this, "PlatMotionManager", "Готово!");
+    }
 }
 
 void MainWidget::on_aboutPB_clicked()

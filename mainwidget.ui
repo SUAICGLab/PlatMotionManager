@@ -59,9 +59,23 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="refreshProjectsPB">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="loadPB">
        <property name="text">
-        <string>Обновить список</string>
+        <string>Загрузить приложение</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="reloadPB">
+       <property name="text">
+        <string>Обновить приложение</string>
        </property>
       </widget>
      </item>
@@ -77,6 +91,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="refreshProjectsPB">
+       <property name="text">
+        <string>Обновить список</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="aboutPB">

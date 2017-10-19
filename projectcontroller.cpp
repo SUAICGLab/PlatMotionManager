@@ -57,7 +57,7 @@ bool ProjectController::prepareProject(uint index) const
                               destinationDirectory, true);
 }
 
-bool ProjectController::restoreDefaultGame() const
+bool ProjectController::restoreDefaultProject() const
 {
     if (!isGameDir(defaultGameDirectory))
             return false;
@@ -66,6 +66,32 @@ bool ProjectController::restoreDefaultGame() const
     QDir(destinationDirectory + QDir::separator() + gameName + "_Data").removeRecursively();
 
     return copy_dir_recursive(defaultGameDirectory, destinationDirectory, true);
+}
+
+bool ProjectController::loadProject(QString projectDir)
+{
+    if (!isGameDir(projectDir))
+        return false;
+
+    QString projectDirName = QDir(projectDir).dirName();
+
+    if (projectsDirectory.contains(projectDirName))
+        return false;
+
+    QDir(projectsDirectory).mkpath(projectDirName);
+
+    return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectDirName, false);
+}
+
+bool ProjectController::reloadProject(uint index, QString projectDir)
+{
+    if (!isGameDir(projectDir))
+        return false;
+
+    QFile(projectsDirectory + QDir::separator() + projectsNames.at(index) + QDir::separator() + gameName + ".exe").remove();
+    QDir(projectsDirectory + QDir::separator() + projectsNames.at(index) + QDir::separator() + gameName + "_Data").removeRecursively();
+
+    return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectsNames.at(index), true);
 }
 
 bool ProjectController::isGameDir(QString dirName) const

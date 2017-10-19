@@ -20,7 +20,9 @@ public:
     const QStringList& getProjectsNames() const { return projectsNames; }
     bool prepareProject(uint index) const;
     void refreshProjectsList();
-    bool restoreDefaultGame() const;
+    bool restoreDefaultProject() const;
+    bool loadProject(QString projectDir);
+    bool reloadProject(uint index, QString projectDir);
     const QString& getProjectsDirectory() const {return projectsDirectory; }
 
 private:
