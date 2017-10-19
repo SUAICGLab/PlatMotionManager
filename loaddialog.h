@@ -9,7 +9,7 @@ class LoadDialog;
 
 /**
  * @brief The LoadDialog class
- * Диалог выбора проекта
+ * @details Диалог выбора проекта
  */
 class LoadDialog : public QDialog
 {
@@ -18,6 +18,7 @@ class LoadDialog : public QDialog
 public:
     explicit LoadDialog(bool add = true, QWidget *parent = 0);
     ~LoadDialog();
+    void setProjectName(QString name);
 
     QString getProjectName() const;
     QString getProjectDir() const;

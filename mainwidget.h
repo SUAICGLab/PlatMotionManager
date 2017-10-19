@@ -13,7 +13,7 @@ class MainWidget;
 
 /**
  * @brief The MainWidget class
- * Реализует пользовательский интерфейс для управления возможностями ProjectController.
+ * @details Реализует пользовательский интерфейс для управления возможностями ProjectController.
  */
 class MainWidget : public QWidget
 {
@@ -36,7 +36,7 @@ private:
     Ui::MainWidget *ui;
     std::unique_ptr<ProjectController> projectController;
 
-    const QString version = "0.1";
+    const QString version = "0.2";
 
     void fillTable();
 };

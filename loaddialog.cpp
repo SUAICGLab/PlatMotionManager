@@ -14,10 +14,10 @@ LoadDialog::LoadDialog(bool add, QWidget *parent) :
     ui->setupUi(this);
 
     if (add)
-        setWindowTitle("Добавить проект");
+        setWindowTitle("Добавить приложение");
     else
     {
-        setWindowTitle("Обновить проект");
+        setWindowTitle("Обновить приложение");
         ui->namePanel->hide();
     }
 }
@@ -47,15 +47,20 @@ QString LoadDialog::getProjectDir() const
     return ui->projectDirLE->text();
 }
 
+void LoadDialog::setProjectName(QString name)
+{
+    ui->projectNameLE->setText(name);
+}
+
 void LoadDialog::on_buttonBox_accepted()
 {
-    if (add && ui->projectNameLE->text().trimmed().isEmpty())
+    if (add && getProjectName().trimmed().isEmpty())
     {
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Имя проекта пустое");
         return;
     }
 
-    if (ui->projectDirLE->text().isEmpty())
+    if (getProjectDir().isEmpty())
     {
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Путь к приложению пустой");
         return;
@@ -64,6 +69,16 @@ void LoadDialog::on_buttonBox_accepted()
     if (!ProjectController::isGameDir(ui->projectDirLE->text()))
     {
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Указанная директория не содержит файлы приложения для SimServer");
+        return;
+    }
+
+    if (!add && QMessageBox::question(this,
+                                      "PlatMotionManager - Предупреждение",
+                                      QString("Вы хотите обновить приложение <b>%1</b>.<br>"
+                                              "Все файлы приложения могут быть потеряны!<br>"
+                                              "Продолжить?").arg(getProjectName())
+                                      ) == QMessageBox::No)
+    {
         return;
     }
 

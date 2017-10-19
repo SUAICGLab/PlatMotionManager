@@ -6,7 +6,7 @@
 
 /**
  * @brief The ProjectController class
- * Содержит все функции, относящиеся к управлению приложениями для SimServer.
+ * @details Содержит все функции, относящиеся к управлению приложениями для SimServer.
  * Предполагается, что в projectsDirectory находятся директории
  * с приложениями студентов. ProjectController позволяет скопировать нужное приложение
  * в destinationDirectory, откуда SimServer сможет его запустить. Кроме того,
@@ -40,7 +40,7 @@ private:
     QStringList projectsNames;
 
     void initialize();
-    bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const;
+    bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit = true) const;
 };
 
 #endif // PROJECTCONTROLLER_H

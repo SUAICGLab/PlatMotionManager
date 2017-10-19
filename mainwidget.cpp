@@ -48,13 +48,16 @@ void MainWidget::on_defaultPB_clicked()
 
 void MainWidget::on_launchPB_clicked()
 {
-    if (!ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
-    {
-        if (!projectController->prepareProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row()))
-            QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу скопировать приложение");
-        else
-            QMessageBox::information(this, "PlatMotionManager", "Готово!");
-    }
+    if (ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
+        return;
+
+    uint selectedRow = ui->projectsTW->selectionModel()->selectedRows(0).at(0).row();
+
+    if (!projectController->prepareProject(selectedRow))
+        QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу скопировать приложение");
+    else
+        QMessageBox::information(this, "PlatMotionManager", "Готово!");
+
 }
 
 void MainWidget::on_refreshProjectsPB_clicked()
@@ -80,20 +83,22 @@ void MainWidget::on_loadPB_clicked()
 
 void MainWidget::on_reloadPB_clicked()
 {
-    if (!ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
-    {
-        auto loadDilog = std::make_unique<LoadDialog>(false);
-        loadDilog->exec();
+    if (ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
+        return;
 
-        if (loadDilog->result() == QDialog::Rejected)
-            return;
+    uint selectedRow = ui->projectsTW->selectionModel()->selectedRows(0).at(0).row();
+    auto loadDilog = std::make_unique<LoadDialog>(false);
+    loadDilog->setProjectName(projectController->getProjectsNames().at(selectedRow));
+    loadDilog->exec();
 
-        if (!projectController->reloadProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row(),
-                                              loadDilog->getProjectDir()))
-            QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу обновить приложение");
-        else
-            QMessageBox::information(this, "PlatMotionManager", "Готово!");
-    }
+    if (loadDilog->result() == QDialog::Rejected)
+        return;
+
+    if (!projectController->reloadProject(selectedRow,
+                                          loadDilog->getProjectDir()))
+        QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу обновить приложение");
+    else
+        QMessageBox::information(this, "PlatMotionManager", "Готово!");
 }
 
 void MainWidget::on_aboutPB_clicked()
@@ -103,15 +108,15 @@ void MainWidget::on_aboutPB_clicked()
     aboutBox.setIconPixmap(QPixmap("://resources/aboutIcon.png"));
     aboutBox.setText(tr("<strong>PlatMotionManager</strong> v%1  - это приложение, позволяющее управлять запуском "
                         "ваших приложений на Unity через SimSever").arg(version));
-    aboutBox.setInformativeText("<p>" + tr("<strong>Как пользоваться:</strong>"
+    aboutBox.setInformativeText("<p>" + tr("<strong>Как добавить своё приложение:</strong>"
                                            "<ol>"
-                                           "<li>Cоздайте папку с именем вашего проекта в <br><i>\"%1\"</i></li>"
-                                           "<li>Положите туда собранный проект (PlatMotionGame.exe и папку PlatMotionGame_Data).</li>"
-                                           "<li>Обновите список проектов. Если всё сделано правильно, ваш проект появится в списке. </li>"
-                                           "<li>Выделите его и нажмите \"Подготовить к запуску\". </li>"
+                                           "<li>Соберите ваше приложение под именем PlatMotionGame</li>"
+                                           "<li>Нажмите кнопку \"Добавить приложение\", укажите путь к собранным файлам и имя приложения.</li>"
+                                           "<li>Выделите ваше прилолжение и нажмите \"Подготовить к запуску\". </li>"
                                            "</ol>"
                                            "После этого вы можете запустить проект через SimServer как обычно, согласно инструкции запуска "
-                                           "(вы можете попросить её у преподавателя).<br><br>")
+                                           "(вы можете попросить её у преподавателя).<br><br>"
+                                           "Вы также можете обновить выбранное вами приложение или восстановить приложение по умолчанию.<br><br>")
                                 .arg(QDir(projectController->getProjectsDirectory()).absolutePath()) +
                                   tr("Репозиторий: ") +
                                 "<a href=https://github.com/SUAICGLab/PlatMotionManager>https://github.com/SUAICGLab/PlatMotionManager</a><br>");

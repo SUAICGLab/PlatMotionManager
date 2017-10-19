@@ -9,6 +9,10 @@ ProjectController::ProjectController()
     initialize();
 }
 
+/**
+ * @brief ProjectController::initialize
+ * @details Загрузка настроек из файла и чтение списка проектов
+ */
 void ProjectController::initialize()
 {
     settings->beginGroup("Main");
@@ -19,22 +23,26 @@ void ProjectController::initialize()
 
     if (!QFile(settingsFileName).exists())
     {
-        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Файл настроек \"settings.ini\" не существует.\n"
-                                                                             "Продолжение работы невозможно. Обратитесь к преподавателю");
+        QMessageBox::critical(nullptr, "PlatMotionManager - Ошибка", "Файл настроек \"settings.ini\" не существует.\n"
+                                                                     "Продолжение работы невозможно. Обратитесь к преподавателю");
         exit(EXIT_FAILURE);
     }
 
     if (projectsDirectory.isEmpty() || destinationDirectory.isEmpty()|| defaultGameDirectory.isEmpty())
     {
-        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Неверный формат файла настроек.\n"
-                                                                             "Один или несколько параметров не указаны.\n"
-                                                                             "Продолжение работы невозможно. Обратитесь к преподавателю");
+        QMessageBox::critical(nullptr, "PlatMotionManager - Ошибка", "Неверный формат файла настроек.\n"
+                                                                      "Один или несколько параметров не указаны.\n"
+                                                                      "Продолжение работы невозможно. Обратитесь к преподавателю");
         exit(EXIT_FAILURE);
     }
 
     refreshProjectsList();
 }
 
+/**
+ * @brief ProjectController::refreshProjectsList
+ * @details Обновление списка проектов. Именем проекта считается папка, в которой он находится
+ */
 void ProjectController::refreshProjectsList()
 {
     QDir projectsDir(projectsDirectory);
@@ -50,6 +58,11 @@ void ProjectController::refreshProjectsList()
     projectsNames.removeAll("..");
 }
 
+/**
+ * @brief ProjectController::prepareProject
+ * @param index - номер проекта в списке проектов
+ * @details Перемещение указанного проекта в директорию, откуда SimServer сможет его запустить
+ */
 bool ProjectController::prepareProject(uint index) const
 {
     QFile(destinationDirectory + QDir::separator() + gameName + ".exe").remove();
@@ -59,6 +72,10 @@ bool ProjectController::prepareProject(uint index) const
                               destinationDirectory, true);
 }
 
+/**
+ * @brief ProjectController::restoreDefaultProject
+ * @details Перемещение проекта по умолчанию в директорию, откуда SimServer сможет его запустить
+ */
 bool ProjectController::restoreDefaultProject() const
 {
     if (!isGameDir(defaultGameDirectory))
@@ -67,9 +84,13 @@ bool ProjectController::restoreDefaultProject() const
     QFile(destinationDirectory + QDir::separator() + gameName + ".exe").remove();
     QDir(destinationDirectory + QDir::separator() + gameName + "_Data").removeRecursively();
 
-    return copy_dir_recursive(defaultGameDirectory, destinationDirectory, true);
+    return copy_dir_recursive(defaultGameDirectory, destinationDirectory);
 }
 
+/**
+ * @brief ProjectController::loadProject
+ * @details Копирование проект в директорию проектов под указанным именем
+ */
 bool ProjectController::loadProject(QString projectName, QString projectDir)
 {
     if (!isGameDir(projectDir) || projectName.trimmed().isEmpty())
@@ -83,6 +104,10 @@ bool ProjectController::loadProject(QString projectName, QString projectDir)
     return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectName, false);
 }
 
+/**
+ * @brief ProjectController::reloadProject
+ * @details Обновление указанного проекта (т.е. удаление всех файлов проекта и копирование новых из указанной директории)
+ */
 bool ProjectController::reloadProject(uint index, QString projectDir)
 {
     if (!isGameDir(projectDir))
@@ -91,9 +116,13 @@ bool ProjectController::reloadProject(uint index, QString projectDir)
     QFile(projectsDirectory + QDir::separator() + projectsNames.at(index) + QDir::separator() + gameName + ".exe").remove();
     QDir(projectsDirectory + QDir::separator() + projectsNames.at(index) + QDir::separator() + gameName + "_Data").removeRecursively();
 
-    return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectsNames.at(index), true);
+    return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectsNames.at(index));
 }
 
+/**
+ * @brief ProjectController::isGameDir
+ * @details Проверяет, содержит ли директория приложение (проект) для SimServer
+ */
 bool ProjectController::isGameDir(QString dirName)
 {
     QDir gameDir(dirName + QDir::separator()
@@ -106,6 +135,10 @@ bool ProjectController::isGameDir(QString dirName)
            executable.exists() == true;
 }
 
+/**
+ * @brief ProjectController::copy_dir_recursive
+ * @return рекурсивно копирует всё содержимое одной директории в другую
+ */
 bool ProjectController::copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const
 {
     QDir dir;
