@@ -1,6 +1,5 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 
@@ -65,12 +64,13 @@ void MainWidget::on_refreshProjectsPB_clicked()
 
 void MainWidget::on_loadPB_clicked()
 {
-    QString projectDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
-                                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    if (projectDir.isEmpty())
+    auto loadDilog = std::make_unique<LoadDialog>();
+    loadDilog->exec();
+
+    if (loadDilog->result() == QDialog::Rejected)
         return;
 
-    if (!projectController->loadProject(projectDir))
+    if (!projectController->loadProject(loadDilog->getProjectName(), loadDilog->getProjectDir()))
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу добавить приложение");
     else
         QMessageBox::information(this, "PlatMotionManager", "Готово!");
@@ -82,12 +82,14 @@ void MainWidget::on_reloadPB_clicked()
 {
     if (!ui->projectsTW->selectionModel()->selectedRows(0).isEmpty())
     {
-        QString projectDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
-                                                               QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-        if (projectDir.isEmpty())
+        auto loadDilog = std::make_unique<LoadDialog>(false);
+        loadDilog->exec();
+
+        if (loadDilog->result() == QDialog::Rejected)
             return;
 
-        if (!projectController->reloadProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row(), projectDir))
+        if (!projectController->reloadProject(ui->projectsTW->selectionModel()->selectedRows(0).at(0).row(),
+                                              loadDilog->getProjectDir()))
             QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу обновить приложение");
         else
             QMessageBox::information(this, "PlatMotionManager", "Готово!");

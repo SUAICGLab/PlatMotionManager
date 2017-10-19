@@ -2,6 +2,7 @@
 #define MAINWIDGET_H
 
 #include "projectcontroller.h"
+#include "loaddialog.h"
 
 #include <QWidget>
 #include <memory>

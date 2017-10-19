@@ -21,13 +21,16 @@ public:
     bool prepareProject(uint index) const;
     void refreshProjectsList();
     bool restoreDefaultProject() const;
-    bool loadProject(QString projectDir);
+    bool loadProject(QString projectName, QString projectDir);
     bool reloadProject(uint index, QString projectDir);
     const QString& getProjectsDirectory() const {return projectsDirectory; }
 
+
+    static bool isGameDir(QString dirName);
+
 private:
     const QString settingsFileName = "settings.ini";
-    const QString gameName = "PlatMotionGame";
+    static const QString gameName;
 
     std::unique_ptr<QSettings> settings;
 
@@ -38,7 +41,6 @@ private:
 
     void initialize();
     bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const;
-    bool isGameDir(QString dirName) const;
 };
 
 #endif // PROJECTCONTROLLER_H

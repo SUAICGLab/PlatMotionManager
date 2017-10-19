@@ -1,6 +1,8 @@
 #include "projectcontroller.h"
 #include <QMessageBox>
 
+const QString ProjectController::gameName = "PlatMotionGame";
+
 ProjectController::ProjectController()
 {
     settings = std::make_unique<QSettings>(settingsFileName, QSettings::IniFormat);
@@ -68,19 +70,17 @@ bool ProjectController::restoreDefaultProject() const
     return copy_dir_recursive(defaultGameDirectory, destinationDirectory, true);
 }
 
-bool ProjectController::loadProject(QString projectDir)
+bool ProjectController::loadProject(QString projectName, QString projectDir)
 {
-    if (!isGameDir(projectDir))
+    if (!isGameDir(projectDir) || projectName.trimmed().isEmpty())
         return false;
 
-    QString projectDirName = QDir(projectDir).dirName();
-
-    if (projectsDirectory.contains(projectDirName))
+    if (projectsNames.contains(projectName))
         return false;
 
-    QDir(projectsDirectory).mkpath(projectDirName);
+    QDir(projectsDirectory).mkpath(projectName);
 
-    return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectDirName, false);
+    return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectName, false);
 }
 
 bool ProjectController::reloadProject(uint index, QString projectDir)
@@ -94,7 +94,7 @@ bool ProjectController::reloadProject(uint index, QString projectDir)
     return copy_dir_recursive(projectDir, projectsDirectory + QDir::separator() + projectsNames.at(index), true);
 }
 
-bool ProjectController::isGameDir(QString dirName) const
+bool ProjectController::isGameDir(QString dirName)
 {
     QDir gameDir(dirName + QDir::separator()
                  + gameName + "_Data");
