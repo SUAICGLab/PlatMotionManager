@@ -11,8 +11,26 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->projectsTW->resizeColumnsToContents();
     ui->projectsTW->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->projectsTW->setEditTriggers(QTableWidget::NoEditTriggers);
+
     projectController = std::make_unique<ProjectController>();
     fillTable();
+
+    connect(ui->projectsTW, &QTableWidget::itemSelectionChanged,
+            [this]()
+            {
+                if (ui->projectsTW->selectedItems().isEmpty())
+                {
+                    ui->reloadPB->setDisabled(true);
+                    ui->launchPB->setDisabled(true);
+                }
+                else
+                {
+                    ui->reloadPB->setEnabled(true);
+                    ui->launchPB->setEnabled(true);
+                }
+            }
+    );
 }
 
 MainWidget::~MainWidget()
