@@ -10,6 +10,10 @@ namespace Ui {
 class MainWidget;
 }
 
+/**
+ * @brief The MainWidget class
+ * Реализует пользовательский интерфейс для управления возможностями ProjectController.
+ */
 class MainWidget : public QWidget
 {
     Q_OBJECT

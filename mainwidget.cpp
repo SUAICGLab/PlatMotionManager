@@ -21,7 +21,7 @@ MainWidget::~MainWidget()
 
 void MainWidget::on_defaultPB_clicked()
 {
-    if (!projectController->restoreDefault())
+    if (!projectController->restoreDefaultGame())
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу восстановить приложение по умолчанию.\n"
                                                                          "Обратитесь к преподавателю");
     else
@@ -68,7 +68,7 @@ void MainWidget::on_aboutPB_clicked()
 
 void MainWidget::fillTable()
 {
-    projectController->refreshList();
+    projectController->refreshProjectsList();
     ui->projectsTW->clearContents();
     ui->projectsTW->setRowCount(projectController->getProjectsNames().size());
 

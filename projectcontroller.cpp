@@ -30,10 +30,10 @@ void ProjectController::initialize()
         exit(EXIT_FAILURE);
     }
 
-    refreshList();
+    refreshProjectsList();
 }
 
-void ProjectController::refreshList()
+void ProjectController::refreshProjectsList()
 {
     QDir projectsDir(projectsDirectory);
     projectsDir.setFilter(QDir::AllDirs);
@@ -57,7 +57,7 @@ bool ProjectController::prepareProject(uint index) const
                               destinationDirectory, true);
 }
 
-bool ProjectController::restoreDefault() const
+bool ProjectController::restoreDefaultGame() const
 {
     if (!isGameDir(defaultGameDirectory))
             return false;
