@@ -12,7 +12,7 @@ MainWidget::MainWidget(QWidget* parent) :
     ui->projectsTW->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->projectsTW->setEditTriggers(QTableWidget::NoEditTriggers);
 
-    projectController = std::make_unique<ProjectController>();
+    appController = std::make_unique<AppController>();
     fillTable();
 
     connect(ui->projectsTW, &QTableWidget::itemSelectionChanged,
@@ -39,7 +39,7 @@ MainWidget::~MainWidget()
 
 void MainWidget::on_defaultPB_clicked()
 {
-    if (!projectController->restoreDefaultProject())
+    if (!appController->restoreDefaultApp())
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу восстановить приложение по умолчанию.\n"
                                                                          "Обратитесь к преподавателю");
     else
@@ -53,7 +53,7 @@ void MainWidget::on_launchPB_clicked()
 
     uint selectedRow = ui->projectsTW->selectionModel()->selectedRows(0).at(0).row();
 
-    if (!projectController->prepareProject(selectedRow))
+    if (!appController->prepareApp(selectedRow))
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу скопировать приложение");
     else
         QMessageBox::information(this, "PlatMotionManager", "Готово!");
@@ -73,7 +73,7 @@ void MainWidget::on_loadPB_clicked()
     if (loadDilog->result() == QDialog::Rejected)
         return;
 
-    if (!projectController->loadProject(loadDilog->getProjectName(), loadDilog->getProjectDir()))
+    if (!appController->loadApp(loadDilog->getAppName(), loadDilog->getAppDir()))
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу добавить приложение");
     else
         QMessageBox::information(this, "PlatMotionManager", "Готово!");
@@ -88,14 +88,14 @@ void MainWidget::on_reloadPB_clicked()
 
     uint selectedRow = ui->projectsTW->selectionModel()->selectedRows(0).at(0).row();
     auto loadDilog = std::make_unique<LoadDialog>(false);
-    loadDilog->setProjectName(projectController->getProjectsNames().at(selectedRow));
+    loadDilog->setAppName(appController->getAppsNames().at(selectedRow));
     loadDilog->exec();
 
     if (loadDilog->result() == QDialog::Rejected)
         return;
 
-    if (!projectController->reloadProject(selectedRow,
-                                          loadDilog->getProjectDir()))
+    if (!appController->reloadApp(selectedRow,
+                                          loadDilog->getAppDir()))
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу обновить приложение");
     else
         QMessageBox::information(this, "PlatMotionManager", "Готово!");
@@ -114,10 +114,10 @@ void MainWidget::on_aboutPB_clicked()
                                            "<li>Нажмите кнопку \"Добавить приложение\", укажите путь к собранным файлам и имя приложения.</li>"
                                            "<li>Выделите ваше прилолжение и нажмите \"Подготовить к запуску\". </li>"
                                            "</ol>"
-                                           "После этого вы можете запустить проект через SimServer как обычно, согласно инструкции запуска "
+                                           "После этого вы можете запустить приложение через SimServer как обычно, согласно инструкции запуска "
                                            "(вы можете попросить её у преподавателя).<br><br>"
                                            "Вы также можете обновить выбранное вами приложение или восстановить приложение по умолчанию.<br><br>")
-                                .arg(QDir(projectController->getProjectsDirectory()).absolutePath()) +
+                                .arg(QDir(appController->getAppsDirectory()).absolutePath()) +
                                   tr("Репозиторий: ") +
                                 "<a href=https://github.com/SUAICGLab/PlatMotionManager>https://github.com/SUAICGLab/PlatMotionManager</a><br>");
     aboutBox.exec();
@@ -125,13 +125,13 @@ void MainWidget::on_aboutPB_clicked()
 
 void MainWidget::fillTable()
 {
-    projectController->refreshProjectsList();
+    appController->refreshAppsList();
     ui->projectsTW->clearContents();
-    ui->projectsTW->setRowCount(projectController->getProjectsNames().size());
+    ui->projectsTW->setRowCount(appController->getAppsNames().size());
 
-    for (auto row = 0; row < projectController->getProjectsNames().size(); row++)
+    for (auto row = 0; row < appController->getAppsNames().size(); row++)
         ui->projectsTW->setItem(row, 0,
-                                new QTableWidgetItem(projectController->getProjectsNames().at(row))
+                                new QTableWidgetItem(appController->getAppsNames().at(row))
                                 );
 
     ui->projectsTW->update();

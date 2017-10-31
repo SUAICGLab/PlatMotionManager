@@ -27,13 +27,13 @@ CONFIG += c++14
 SOURCES += \
         main.cpp \
         mainwidget.cpp \
-    projectcontroller.cpp \
-    loaddialog.cpp
+    loaddialog.cpp \
+    appcontroller.cpp
 
 HEADERS += \
         mainwidget.h \
-    projectcontroller.h \
-    loaddialog.h
+    loaddialog.h \
+    appcontroller.h
 
 FORMS += \
         mainwidget.ui \

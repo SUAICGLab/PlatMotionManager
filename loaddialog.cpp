@@ -1,6 +1,6 @@
 #include "loaddialog.h"
 #include "ui_loaddialog.h"
-#include "projectcontroller.h"
+#include "appcontroller.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -29,44 +29,44 @@ LoadDialog::~LoadDialog()
 
 void LoadDialog::on_browsePB_clicked()
 {
-    QString projectDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
+    QString appDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
                                                            QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    if (projectDir.isEmpty())
+    if (appDir.isEmpty())
         return;
 
-    ui->projectDirLE->setText(projectDir);
+    ui->projectDirLE->setText(appDir);
 }
 
-QString LoadDialog::getProjectName() const
+QString LoadDialog::getAppName() const
 {
     return ui->projectNameLE->text();
 }
 
-QString LoadDialog::getProjectDir() const
+QString LoadDialog::getAppDir() const
 {
     return ui->projectDirLE->text();
 }
 
-void LoadDialog::setProjectName(QString name)
+void LoadDialog::setAppName(QString name)
 {
     ui->projectNameLE->setText(name);
 }
 
 void LoadDialog::on_buttonBox_accepted()
 {
-    if (add && getProjectName().trimmed().isEmpty())
+    if (add && getAppName().trimmed().isEmpty())
     {
-        QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Имя проекта пустое");
+        QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Имя приложения пустое");
         return;
     }
 
-    if (getProjectDir().isEmpty())
+    if (getAppDir().isEmpty())
     {
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Путь к приложению пустой");
         return;
     }
 
-    if (!ProjectController::isGameDir(ui->projectDirLE->text()))
+    if (!AppController::isGameDir(ui->projectDirLE->text()))
     {
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Указанная директория не содержит файлы приложения для SimServer");
         return;
@@ -76,7 +76,7 @@ void LoadDialog::on_buttonBox_accepted()
                                       "PlatMotionManager - Предупреждение",
                                       QString("Вы хотите обновить приложение <b>%1</b>.<br>"
                                               "Все файлы приложения могут быть потеряны!<br>"
-                                              "Продолжить?").arg(getProjectName())
+                                              "Продолжить?").arg(getAppName())
                                       ) == QMessageBox::No)
     {
         return;

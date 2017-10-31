@@ -9,7 +9,7 @@ class LoadDialog;
 
 /**
  * @brief The LoadDialog class
- * @details Диалог выбора проекта
+ * @details Диалог выбора приложения
  */
 class LoadDialog : public QDialog
 {
@@ -18,10 +18,10 @@ class LoadDialog : public QDialog
 public:
     explicit LoadDialog(bool add = true, QWidget* parent = nullptr);
     ~LoadDialog();
-    void setProjectName(QString name);
+    void setAppName(QString name);
 
-    QString getProjectName() const;
-    QString getProjectDir() const;
+    QString getAppName() const;
+    QString getAppDir() const;
 
 private slots:
     void on_browsePB_clicked();

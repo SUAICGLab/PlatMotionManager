@@ -1,7 +1,7 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include "projectcontroller.h"
+#include "appcontroller.h"
 #include "loaddialog.h"
 
 #include <QWidget>
@@ -34,9 +34,9 @@ private slots:
 
 private:
     Ui::MainWidget *ui;
-    std::unique_ptr<ProjectController> projectController;
+    std::unique_ptr<AppController> appController;
 
-    const QString version = "0.2";
+    const QString version = "0.3";
 
     void fillTable();
 };
