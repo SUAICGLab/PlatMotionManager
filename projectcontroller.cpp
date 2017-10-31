@@ -19,6 +19,7 @@ void ProjectController::initialize()
     projectsDirectory    = settings->value("projects-directory").toString();
     destinationDirectory = settings->value("game-directory").toString();
     defaultGameDirectory = settings->value("default-game-directory").toString();
+    sendEnterDirectory   = settings->value("send-enter-directory").toString();
     settings->endGroup();
 
     if (!QFile(settingsFileName).exists())
@@ -28,7 +29,7 @@ void ProjectController::initialize()
         exit(EXIT_FAILURE);
     }
 
-    if (projectsDirectory.isEmpty() || destinationDirectory.isEmpty()|| defaultGameDirectory.isEmpty())
+    if (projectsDirectory.isEmpty() || destinationDirectory.isEmpty() || defaultGameDirectory.isEmpty() || sendEnterDirectory.isEmpty())
     {
         QMessageBox::critical(nullptr, "PlatMotionManager - Ошибка", "Неверный формат файла настроек.\n"
                                                                       "Один или несколько параметров не указаны.\n"
@@ -65,8 +66,7 @@ void ProjectController::refreshProjectsList()
  */
 bool ProjectController::prepareProject(uint index) const
 {
-    QFile(destinationDirectory + QDir::separator() + gameName + ".exe").remove();
-    QDir(destinationDirectory + QDir::separator() + gameName + "_Data").removeRecursively();
+    prepareDestinationDirectory();
 
     return copy_dir_recursive(projectsDirectory + QDir::separator() + projectsNames.at(index),
                               destinationDirectory, true);
@@ -81,8 +81,7 @@ bool ProjectController::restoreDefaultProject() const
     if (!isGameDir(defaultGameDirectory))
             return false;
 
-    QFile(destinationDirectory + QDir::separator() + gameName + ".exe").remove();
-    QDir(destinationDirectory + QDir::separator() + gameName + "_Data").removeRecursively();
+    prepareDestinationDirectory();
 
     return copy_dir_recursive(defaultGameDirectory, destinationDirectory);
 }
@@ -137,7 +136,7 @@ bool ProjectController::isGameDir(QString dirName)
 
 /**
  * @brief ProjectController::copy_dir_recursive
- * @return рекурсивно копирует всё содержимое одной директории в другую
+ * @return Рекурсивно копирует всё содержимое одной директории в другую
  */
 bool ProjectController::copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const
 {
@@ -182,4 +181,20 @@ bool ProjectController::copy_dir_recursive(QString from_dir, QString to_dir, boo
     }
 
     return true;
+}
+
+/**
+ * @brief ProjectController::prepareDestinationDirectory
+ * @details Удаляет destinationDirectory вместе со всем содержимым и создаёт новую,
+ *          пустую директорию с тем же именем, а затем копирует туда SendEnter
+ */
+void ProjectController::prepareDestinationDirectory() const
+{
+    QDir destinationDir(destinationDirectory);
+    QString destinationDirName = destinationDir.dirName();
+    destinationDir.removeRecursively();
+    destinationDir.cdUp();
+    destinationDir.mkpath(destinationDirName);
+    QFile::copy(sendEnterDirectory   + QDir::separator() + sendEnterName,
+                destinationDirectory + QDir::separator() + sendEnterName);
 }

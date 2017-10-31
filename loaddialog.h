@@ -16,7 +16,7 @@ class LoadDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoadDialog(bool add = true, QWidget *parent = nullptr);
+    explicit LoadDialog(bool add = true, QWidget* parent = nullptr);
     ~LoadDialog();
     void setProjectName(QString name);
 

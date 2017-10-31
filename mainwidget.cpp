@@ -3,7 +3,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-MainWidget::MainWidget(QWidget *parent) :
+MainWidget::MainWidget(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::MainWidget)
 {

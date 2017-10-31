@@ -20,7 +20,7 @@ class MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MainWidget(QWidget *parent = nullptr);
+    explicit MainWidget(QWidget* parent = nullptr);
     ~MainWidget();
 
 private slots:

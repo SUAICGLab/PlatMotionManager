@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 
-LoadDialog::LoadDialog(bool add, QWidget *parent) :
+LoadDialog::LoadDialog(bool add, QWidget* parent) :
     QDialog(parent),
     ui(new Ui::LoadDialog),
     add(add)

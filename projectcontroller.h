@@ -23,13 +23,14 @@ public:
     bool restoreDefaultProject() const;
     bool loadProject(QString projectName, QString projectDir);
     bool reloadProject(uint index, QString projectDir);
-    const QString& getProjectsDirectory() const {return projectsDirectory; }
+    const QString& getProjectsDirectory() const { return projectsDirectory; }
 
 
     static bool isGameDir(QString dirName);
 
 private:
     const QString settingsFileName = "settings.ini";
+    const QString sendEnterName = "SendEnter.exe";
     static const QString gameName;
 
     std::unique_ptr<QSettings> settings;
@@ -37,10 +38,12 @@ private:
     QString projectsDirectory;
     QString destinationDirectory;
     QString defaultGameDirectory;
+    QString sendEnterDirectory;
     QStringList projectsNames;
 
     void initialize();
     bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit = true) const;
+    void prepareDestinationDirectory() const;
 };
 
 #endif // PROJECTCONTROLLER_H
