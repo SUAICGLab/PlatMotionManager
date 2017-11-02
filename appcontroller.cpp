@@ -208,27 +208,41 @@ void AppController::checkSettings()
     }
 
     QFileInfo appsDirectoryInfo(appsDirectory);
+
     if (!appsDirectoryInfo.exists() || !appsDirectoryInfo.isWritable())
-        QMessageBox::warning(nullptr, "PlatMotionManager - Предупреждение", "Директория со студенческими приложениями не существует либо недоступна.\n"
-                                                                            "Обратитесь к преподавателю");
+    {
+        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Директория со студенческими приложениями не существует либо недоступна.\n"
+                                                                             "Обратитесь к преподавателю");
+        exit(EXIT_FAILURE);
+    }
 
     QFileInfo destinationDirectoryInfo(destinationDirectory);
     if (!destinationDirectoryInfo.exists() || !destinationDirectoryInfo.isWritable())
-        QMessageBox::warning(nullptr, "PlatMotionManager - Предупреждение", "Директория, откуда SimServer запускает приложение, не существует либо недоступна.\n"
-                                                                            "Обратитесь к преподавателю");
+    {
+        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Директория, откуда SimServer запускает приложение, не существует либо недоступна.\n"
+                                                                             "Обратитесь к преподавателю");
+        exit(EXIT_FAILURE);
+    }
 
     QFileInfo defaultAppDirectoryInfo(defaultAppDirectory);
     if (!defaultAppDirectoryInfo.exists() ||
         !defaultAppDirectoryInfo.isReadable() ||
         !isGameDir(defaultAppDirectory))
-        QMessageBox::warning(nullptr, "PlatMotionManager - Предупреждение", "Указана неверная директория для приложения по умолчанию.\n"
-                                                                            "Обратитесь к преподавателю");
+    {
+        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Указана неверная директория для приложения по умолчанию.\n"
+                                                                             "Обратитесь к преподавателю");
+        exit(EXIT_FAILURE);
+    }
+
     QFileInfo sendEnterDirectoryInfo(sendEnterDirectory);
     QFileInfo sendEnterExeInfo(sendEnterDirectory + QDir::separator() + sendEnterName);
     if (!sendEnterDirectoryInfo.exists() ||
         !sendEnterDirectoryInfo.isReadable() ||
         !sendEnterExeInfo.exists() ||
         !sendEnterDirectoryInfo.isReadable())
-        QMessageBox::warning(nullptr, "PlatMotionManager - Предупреждение", "Указана неверная директория для SendEnter.\n"
-                                                                            "Обратитесь к преподавателю");
+    {
+        QMessageBox::critical(nullptr, "PlatMotionManager - Предупреждение", "Указана неверная директория для SendEnter.\n"
+                                                                             "Обратитесь к преподавателю");
+        exit(EXIT_FAILURE);
+    }
 }
