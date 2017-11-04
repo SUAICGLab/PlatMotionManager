@@ -50,14 +50,14 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Подготовить к запуску</string>
+        <string>&amp;Подготовить к запуску</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="defaultPB">
        <property name="text">
-        <string>Восстановить по умолчанию</string>
+        <string>&amp;Восстановить по умолчанию</string>
        </property>
       </widget>
      </item>
@@ -71,7 +71,7 @@
      <item>
       <widget class="QPushButton" name="loadPB">
        <property name="text">
-        <string>Загрузить приложение</string>
+        <string>&amp;Загрузить приложение</string>
        </property>
       </widget>
      </item>
@@ -81,7 +81,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Обновить приложение</string>
+        <string>&amp;Обновить приложение</string>
        </property>
       </widget>
      </item>
@@ -101,14 +101,14 @@
      <item>
       <widget class="QPushButton" name="refreshProjectsPB">
        <property name="text">
-        <string>Обновить список</string>
+        <string>Обновить &amp;список</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="aboutPB">
        <property name="text">
-        <string>О программе</string>
+        <string>О &amp;программе</string>
        </property>
       </widget>
      </item>

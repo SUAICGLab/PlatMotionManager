@@ -18,13 +18,12 @@ public:
     AppController();
 
     const QStringList getAppsNames() const { return appsNames; }
+    const QString getAppsDirectory() const { return appsDirectory; }
     bool prepareApp(uint index) const;
     void refreshAppsList();
     bool restoreDefaultApp() const;
     bool loadApp(QString appName, QString appDir);
     bool reloadApp(uint index, QString appDir);
-    const QString getAppsDirectory() const { return appsDirectory; }
-
 
     static bool isGameDir(QString dirName);
 
@@ -34,7 +33,6 @@ private:
     static const QString gameName;
 
     std::unique_ptr<QSettings> settings;
-
     QString appsDirectory;
     QString destinationDirectory;
     QString defaultAppDirectory;
@@ -42,7 +40,7 @@ private:
     QStringList appsNames;
 
     void initialize();
-    bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit = true) const;
+    bool copyDirRecursive(QString from_dir, QString to_dir, bool replace_on_conflit = true) const;
     void prepareDirectory(QString directory, bool copySimServer = false) const;
     void checkSettings();
 };

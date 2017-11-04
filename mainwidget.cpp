@@ -18,16 +18,9 @@ MainWidget::MainWidget(QWidget* parent) :
     connect(ui->projectsTW, &QTableWidget::itemSelectionChanged,
             [this]()
             {
-                if (ui->projectsTW->selectedItems().isEmpty())
-                {
-                    ui->reloadPB->setDisabled(true);
-                    ui->launchPB->setDisabled(true);
-                }
-                else
-                {
-                    ui->reloadPB->setEnabled(true);
-                    ui->launchPB->setEnabled(true);
-                }
+                bool disabled = ui->projectsTW->selectedItems().isEmpty();
+                ui->reloadPB->setDisabled(disabled);
+                ui->launchPB->setDisabled(disabled);
             }
     );
 }

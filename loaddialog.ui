@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>121</height>
+    <height>141</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,7 +53,7 @@
      <item>
       <widget class="QPushButton" name="browsePB">
        <property name="text">
-        <string>Обзор</string>
+        <string>&amp;Обзор</string>
        </property>
       </widget>
      </item>

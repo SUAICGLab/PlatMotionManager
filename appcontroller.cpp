@@ -28,7 +28,7 @@ void AppController::initialize()
 
 /**
  * @brief AppController::refreshProjectsList
- * @details Обновление списка приложений. Именем проекта считается папка, в которой он находится
+ * @details Обновление списка приложений. Именем приложения считается папка, в которой оно находится
  */
 void AppController::refreshAppsList()
 {
@@ -38,7 +38,7 @@ void AppController::refreshAppsList()
 
     for (auto& name: appsNames)
     {
-        if(!isGameDir(appsDirectory + QDir::separator() + name))
+        if (!isGameDir(appsDirectory + QDir::separator() + name))
             appsNames.removeAll(name);
     }
 
@@ -47,14 +47,14 @@ void AppController::refreshAppsList()
 
 /**
  * @brief AppController::prepareProject
- * @param index - номер проекта в списке приложений
+ * @param index - номер приложения в списке приложений (appsNames)
  * @details Перемещение указанного приложения в директорию, откуда SimServer сможет его запустить
  */
 bool AppController::prepareApp(uint index) const
 {
     prepareDirectory(destinationDirectory, true);
 
-    return copy_dir_recursive(appsDirectory + QDir::separator() + appsNames.at(index),
+    return copyDirRecursive(appsDirectory + QDir::separator() + appsNames.at(index),
                               destinationDirectory, true);
 }
 
@@ -69,7 +69,7 @@ bool AppController::restoreDefaultApp() const
 
     prepareDirectory(defaultAppDirectory, true);
 
-    return copy_dir_recursive(defaultAppDirectory, destinationDirectory);
+    return copyDirRecursive(defaultAppDirectory, destinationDirectory);
 }
 
 /**
@@ -86,7 +86,7 @@ bool AppController::loadApp(QString appName, QString appDir)
 
     QDir(appsDirectory).mkpath(appName);
 
-    return copy_dir_recursive(appDir, appsDirectory + QDir::separator() + appName, false);
+    return copyDirRecursive(appDir, appsDirectory + QDir::separator() + appName, false);
 }
 
 /**
@@ -100,7 +100,7 @@ bool AppController::reloadApp(uint index, QString appDir)
 
     prepareDirectory(appsDirectory + QDir::separator() + appsNames.at(index));
 
-    return copy_dir_recursive(appDir, appsDirectory + QDir::separator() + appsNames.at(index));
+    return copyDirRecursive(appDir, appsDirectory + QDir::separator() + appsNames.at(index));
 }
 
 /**
@@ -120,10 +120,10 @@ bool AppController::isGameDir(QString dirName)
 }
 
 /**
- * @brief AppController::copy_dir_recursive
+ * @brief AppController::copyDirRecursive
  * @return Рекурсивно копирует всё содержимое одной директории в другую
  */
-bool AppController::copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit) const
+bool AppController::copyDirRecursive(QString from_dir, QString to_dir, bool replace_on_conflit) const
 {
     QDir dir;
     dir.setPath(from_dir);
@@ -161,7 +161,7 @@ bool AppController::copy_dir_recursive(QString from_dir, QString to_dir, bool re
         if (QDir(to_dir).mkpath(copy_dir) == false)
             return false;
 
-        if (copy_dir_recursive(from, to, replace_on_conflit) == false)
+        if (copyDirRecursive(from, to, replace_on_conflit) == false)
             return false;
     }
 
