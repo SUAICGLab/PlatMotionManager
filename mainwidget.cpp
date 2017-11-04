@@ -109,8 +109,7 @@ void MainWidget::on_aboutPB_clicked()
                                            "</ol>"
                                            "После этого вы можете запустить приложение через SimServer как обычно, согласно инструкции запуска "
                                            "(вы можете попросить её у преподавателя).<br><br>"
-                                           "Вы также можете обновить выбранное вами приложение или восстановить приложение по умолчанию.<br><br>")
-                                .arg(QDir(appController->getAppsDirectory()).absolutePath()) +
+                                           "Вы также можете обновить выбранное вами приложение или восстановить приложение по умолчанию.<br><br>") +
                                   tr("Репозиторий: ") +
                                 "<a href=https://github.com/SUAICGLab/PlatMotionManager>https://github.com/SUAICGLab/PlatMotionManager</a><br>");
     aboutBox.exec();
@@ -119,12 +118,14 @@ void MainWidget::on_aboutPB_clicked()
 void MainWidget::fillTable()
 {
     appController->refreshAppsList();
-    ui->projectsTW->clearContents();
-    ui->projectsTW->setRowCount(appController->getAppsNames().size());
+    const auto& appsNames = appController->getAppsNames();
 
-    for (auto row = 0; row < appController->getAppsNames().size(); row++)
+    ui->projectsTW->clearContents();
+    ui->projectsTW->setRowCount(appsNames.size());
+
+    for (auto row = 0; row < appsNames.size(); row++)
         ui->projectsTW->setItem(row, 0,
-                                new QTableWidgetItem(appController->getAppsNames().at(row))
+                                new QTableWidgetItem(appsNames.at(row))
                                 );
 
     ui->projectsTW->update();

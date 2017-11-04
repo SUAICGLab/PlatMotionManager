@@ -52,6 +52,9 @@ void AppController::refreshAppsList()
  */
 bool AppController::prepareApp(uint index) const
 {
+    if (!isGameDir(appsDirectory + QDir::separator() + appsNames.at(index)))
+        return false;
+
     prepareDirectory(destinationDirectory, true);
 
     return copyDirRecursive(appsDirectory + QDir::separator() + appsNames.at(index),
@@ -67,7 +70,7 @@ bool AppController::restoreDefaultApp() const
     if (!isGameDir(defaultAppDirectory))
             return false;
 
-    prepareDirectory(defaultAppDirectory, true);
+    prepareDirectory(destinationDirectory, true);
 
     return copyDirRecursive(defaultAppDirectory, destinationDirectory);
 }
@@ -81,7 +84,7 @@ bool AppController::loadApp(QString appName, QString appDir)
     if (!isGameDir(appDir) || appName.trimmed().isEmpty())
         return false;
 
-    if (appsNames.contains(appName))
+    if (appsNames.contains(appName) || QDir(appsDirectory + QDir::separator() + appName).exists())
         return false;
 
     QDir(appsDirectory).mkpath(appName);

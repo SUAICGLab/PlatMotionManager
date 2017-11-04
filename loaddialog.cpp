@@ -12,6 +12,7 @@ LoadDialog::LoadDialog(bool add, QWidget* parent) :
     add(add)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
 
     if (add)
         setWindowTitle("Добавить приложение");
@@ -75,7 +76,7 @@ void LoadDialog::on_buttonBox_accepted()
     if (!add && QMessageBox::question(this,
                                       "PlatMotionManager - Предупреждение",
                                       QString("Вы хотите обновить приложение <b>%1</b>.<br>"
-                                              "Все файлы приложения могут быть потеряны!<br>"
+                                              "Все файлы предыдущей версии приложения могут быть потеряны!<br>"
                                               "Продолжить?").arg(getAppName())
                                       ) == QMessageBox::No)
     {
