@@ -29,7 +29,6 @@ private slots:
     void on_refreshProjectsPB_clicked();
     void on_aboutPB_clicked();
     void on_loadPB_clicked();
-
     void on_reloadPB_clicked();
 
 private:

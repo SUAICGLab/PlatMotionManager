@@ -33,16 +33,13 @@ void AppController::initialize()
 void AppController::refreshAppsList()
 {
     QDir projectsDir(appsDirectory);
-    projectsDir.setFilter(QDir::AllDirs);
-    appsNames = projectsDir.entryList();
+    appsNames = projectsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
     for (auto& name: appsNames)
     {
         if (!isGameDir(appsDirectory + QDir::separator() + name))
             appsNames.removeAll(name);
     }
-
-    appsNames.removeAll("..");
 }
 
 /**
@@ -58,7 +55,7 @@ bool AppController::prepareApp(uint index) const
     prepareDirectory(destinationDirectory, true);
 
     return copyDirRecursive(appsDirectory + QDir::separator() + appsNames.at(index),
-                              destinationDirectory, true);
+                            destinationDirectory, true);
 }
 
 /**
@@ -112,10 +109,8 @@ bool AppController::reloadApp(uint index, QString appDir)
  */
 bool AppController::isGameDir(QString dirName)
 {
-    QDir gameDir(dirName + QDir::separator()
-                 + gameName + "_Data");
-    QFile executable(dirName + QDir::separator()
-                     + gameName + ".exe");
+    QDir  gameDir(   dirName + QDir::separator() + gameName + "_Data");
+    QFile executable(dirName + QDir::separator() + gameName + ".exe");
 
     return gameDir.exists()    == true  &&
            gameDir.isEmpty()   == false &&
@@ -132,12 +127,12 @@ bool AppController::copyDirRecursive(QString from_dir, QString to_dir, bool repl
     dir.setPath(from_dir);
 
     from_dir += QDir::separator();
-    to_dir += QDir::separator();
+    to_dir   += QDir::separator();
 
     for (const auto& copy_file : dir.entryList(QDir::Files))
     {
         QString from = from_dir + copy_file;
-        QString to = to_dir + copy_file;
+        QString to   = to_dir   + copy_file;
 
         if (QFile::exists(to))
         {
@@ -159,7 +154,7 @@ bool AppController::copyDirRecursive(QString from_dir, QString to_dir, bool repl
     for (const auto& copy_dir : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
         QString from = from_dir + copy_dir;
-        QString to = to_dir + copy_dir;
+        QString to   = to_dir   + copy_dir;
 
         if (QDir(to_dir).mkpath(copy_dir) == false)
             return false;
