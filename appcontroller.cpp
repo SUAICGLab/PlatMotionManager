@@ -69,7 +69,7 @@ bool AppController::restoreDefaultApp() const
 
     prepareDirectory(destinationDirectory, true);
 
-    return copyDirRecursive(defaultAppDirectory, destinationDirectory);
+    return copyDirRecursive(defaultAppDirectory, destinationDirectory, true);
 }
 
 /**

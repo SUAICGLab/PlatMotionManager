@@ -31,7 +31,7 @@ LoadDialog::~LoadDialog()
 void LoadDialog::on_browsePB_clicked()
 {
     QString appDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "%USERPROFILE%",
-                                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     if (appDir.isEmpty())
         return;
 
@@ -73,8 +73,7 @@ void LoadDialog::on_buttonBox_accepted()
         return;
     }
 
-    if (!add && QMessageBox::question(this,
-                                      "PlatMotionManager - Предупреждение",
+    if (!add && QMessageBox::question(this, "PlatMotionManager - Предупреждение",
                                       QString("Вы хотите обновить приложение <b>%1</b>.<br>"
                                               "Все файлы предыдущей версии приложения могут быть потеряны!<br>"
                                               "Продолжить?").arg(getAppName())
