@@ -35,7 +35,7 @@ private:
     Ui::MainWidget *ui;
     std::unique_ptr<AppController> appController;
 
-    const QString version = "0.3.2";
+    const QString version = "0.3.3";
 
     void fillTable();
 };

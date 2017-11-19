@@ -55,10 +55,19 @@ void LoadDialog::setAppName(QString name)
 
 void LoadDialog::on_buttonBox_accepted()
 {
-    if (add && getAppName().trimmed().isEmpty())
+    if (add)
     {
-        QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Имя приложения пустое");
-        return;
+        if (getAppName().trimmed().isEmpty())
+        {
+            QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Имя приложения пустое");
+            return;
+        }
+
+        if (getAppName().trimmed().contains(QRegularExpression("[\\\\/]"))) // слеш и обратный слеш
+        {
+            QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Имя приложения содержит недопустимые символы");
+            return;
+        }
     }
 
     if (getAppDir().isEmpty())
