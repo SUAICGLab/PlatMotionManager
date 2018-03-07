@@ -2,6 +2,7 @@
 #define LOADDIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
 class LoadDialog;
@@ -16,10 +17,16 @@ class LoadDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoadDialog(bool add = true, QWidget* parent = nullptr);
-    ~LoadDialog();
-    void setAppName(QString name);
+    enum class Action
+    {
+        Add,
+        Update
+    };
 
+    explicit LoadDialog(Action action = Action::Add, QWidget* parent = nullptr);
+    ~LoadDialog();
+
+    void setAppName(QString name);
     QString getAppName() const;
     QString getAppDir() const;
 
@@ -28,7 +35,7 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::LoadDialog *ui;
+    std::unique_ptr<Ui::LoadDialog> ui;
     bool add;
 };
 

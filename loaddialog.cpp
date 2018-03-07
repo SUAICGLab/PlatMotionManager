@@ -6,10 +6,10 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 
-LoadDialog::LoadDialog(bool add, QWidget* parent) :
+LoadDialog::LoadDialog(Action action, QWidget* parent) :
     QDialog(parent),
-    ui(new Ui::LoadDialog),
-    add(add)
+    ui(std::make_unique<Ui::LoadDialog>()),
+    add(action == Action::Add)
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
@@ -25,7 +25,6 @@ LoadDialog::LoadDialog(bool add, QWidget* parent) :
 
 LoadDialog::~LoadDialog()
 {
-    delete ui;
 }
 
 void LoadDialog::on_browsePB_clicked()

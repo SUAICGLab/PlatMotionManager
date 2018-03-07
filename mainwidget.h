@@ -32,7 +32,7 @@ private slots:
     void on_reloadPB_clicked();
 
 private:
-    Ui::MainWidget *ui;
+    std::unique_ptr<Ui::MainWidget> ui;
     std::unique_ptr<AppController> appController;
 
     const QString version = "0.3.3";

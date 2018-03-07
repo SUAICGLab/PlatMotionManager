@@ -5,7 +5,7 @@
 
 MainWidget::MainWidget(QWidget* parent) :
     QWidget(parent),
-    ui(new Ui::MainWidget)
+    ui(std::make_unique<Ui::MainWidget>())
 {
     ui->setupUi(this);
     ui->projectsTW->resizeColumnsToContents();
@@ -27,7 +27,6 @@ MainWidget::MainWidget(QWidget* parent) :
 
 MainWidget::~MainWidget()
 {
-    delete ui;
 }
 
 void MainWidget::on_defaultPB_clicked()
@@ -60,13 +59,13 @@ void MainWidget::on_refreshProjectsPB_clicked()
 
 void MainWidget::on_loadPB_clicked()
 {
-    auto loadDilog = std::make_unique<LoadDialog>();
-    loadDilog->exec();
+    auto loadDialog = std::make_unique<LoadDialog>(LoadDialog::Action::Add);
+    loadDialog->exec();
 
-    if (loadDilog->result() == QDialog::Rejected)
+    if (loadDialog->result() == QDialog::Rejected)
         return;
 
-    if (!appController->loadApp(loadDilog->getAppName(), loadDilog->getAppDir()))
+    if (!appController->loadApp(loadDialog->getAppName(), loadDialog->getAppDir()))
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу добавить приложение");
     else
         QMessageBox::information(this, "PlatMotionManager", "Готово!");
@@ -80,15 +79,15 @@ void MainWidget::on_reloadPB_clicked()
         return;
 
     uint selectedRow = ui->projectsTW->selectionModel()->selectedRows(0).at(0).row();
-    auto loadDilog = std::make_unique<LoadDialog>(false);
-    loadDilog->setAppName(appController->getAppsNames().at(selectedRow));
-    loadDilog->exec();
+    auto loadDialog = std::make_unique<LoadDialog>(LoadDialog::Action::Update);
+    loadDialog->setAppName(appController->getAppsNames().at(selectedRow));
+    loadDialog->exec();
 
-    if (loadDilog->result() == QDialog::Rejected)
+    if (loadDialog->result() == QDialog::Rejected)
         return;
 
     if (!appController->reloadApp(selectedRow,
-                                          loadDilog->getAppDir()))
+                                  loadDialog->getAppDir()))
         QMessageBox::warning(this, "PlatMotionManager - Предупреждение", "Не могу обновить приложение");
     else
         QMessageBox::information(this, "PlatMotionManager", "Готово!");
